@@ -1,0 +1,6 @@
+{
+  "esnext": true,
+  "asi": true,
+  "undef": true,
+  "node": true
+}
