@@ -4,8 +4,8 @@
   "description": "Class for fetching and caching an asset over http",
   "main": "lib/HttpAsset.js",
   "scripts": {
-    "test": "mocha -r babel/register -r test/support.js src/**/__tests__/**/*.js",
-    "compile": "rm -rf lib && babel src/ -d lib/ --ignore './__tests__/*'",
+    "test": "npm run compile && mocha lib/**/__tests__/**/*.js",
+    "compile": "rm -rf lib && babel --optional runtime src/ -d lib/",
     "prepublish": "npm run compile"
   },
   "keywords": [
@@ -17,17 +17,17 @@
   "author": "Spencer Alger <email@spalger.com>",
   "license": "MIT",
   "dependencies": {
+    "babel-runtime": "^5.5.8",
     "debug": "^2.2.0",
+    "lodash.defaults": "^3.1.1",
     "node-fetch": "^1.3.0",
     "spark-md5": "0.0.5",
     "temp": "^0.8.3",
-    "lodash.defaults": "^3.1.1",
     "ya-cache": "^1.0.0-alpha.2"
   },
   "devDependencies": {
     "babel": "^5.5.7",
     "chai": "^3.0.0",
-    "chai-as-promised": "^5.1.0",
     "mocha": "^2.2.5"
   }
 }

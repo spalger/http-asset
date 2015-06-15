@@ -1,10 +1,12 @@
 describe('HttpAsset', ()=> {
+  require('chai').should()
+
   let {parse} = require('url')
   let {existsSync, unlinkSync} = require('fs')
   let defaults = require('lodash.defaults');
 
+  let MockServer = require('./MockServer')
   let HttpAsset = require('../HttpAsset')
-  let MockServer = require('../../test/MockServer')
 
   let cachePath = __dirname + '/__cache__'
   let clear = ()=> existsSync(cachePath) && unlinkSync(cachePath)
