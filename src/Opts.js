@@ -1,7 +1,7 @@
 let {path} = require('temp')
 let {join} = require('path')
 let {tmpDir} = require('os')
-let checksum = require('checksum')
+let md5 = require('spark-md5').hash
 
 const fiveMinutes = 1000 * 60 * 5
 
@@ -10,24 +10,15 @@ let defaultCachePath = null
 
 export default class Opts {
   constructor(url, overrides) {
-    this.id = null
     this.cache = true
-    this.cachePath = null
     this.cacheStaleMs = fiveMinutes
-    this.serveStaleOnFail = true
 
     Object.assign(this, overrides)
 
-    if (!this.id) {
-      this.id = checksum(url)
+    if (this.cachePath == null) {
+      let dir = this.cacheDir == null ? defaultCacheDir : this.cacheDir
+      let name = this.cacheName == null ? md5(url) : this.cacheName
+      this.cachePath = join(dir, name)
     }
-
-    if (this.cachePath === null) {
-      this.cachePath = defaultCachePath || join(defaultCacheDir, this.id)
-    }
-  }
-
-  static set __defaultCachePath__(dir) {
-    defaultCachePath = dir
   }
 }

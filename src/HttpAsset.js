@@ -37,6 +37,11 @@ export default class HttpAsset {
     return cache.body
   }
 
+  async clear() {
+    this.__active__ && await this.__active__
+    await this.store.clear()
+  }
+
   async _request(cache = null) {
     if (this.__active__) return await this.__active__;
 

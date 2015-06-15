@@ -1,16 +1,18 @@
 describe('HttpAsset', ()=> {
   let {parse} = require('url')
   let {existsSync, unlinkSync} = require('fs')
+  let defaults = require('lodash.defaults');
 
   let HttpAsset = require('../HttpAsset')
   let MockServer = require('../../test/MockServer')
 
   let cachePath = __dirname + '/__cache__'
-  require('../Opts').__defaultCachePath__ = cachePath
-
   let clear = ()=> existsSync(cachePath) && unlinkSync(cachePath)
-  let url = (path) => 'http://localhost:8888' + path
   let delay = n => new Promise(resolve => setTimeout(resolve, n))
+  let assetFactory = (path, opts) => {
+    opts = defaults({}, opts, { cachePath: cachePath })
+    return new HttpAsset('http://localhost:8888' + path, opts)
+  }
 
   let server;
   before(()=> {
@@ -22,13 +24,13 @@ describe('HttpAsset', ()=> {
   beforeEach(clear)
 
   after(()=> server.close())
-  after(()=> clear)
+  after(clear)
 
   describe('#get()', ()=> {
 
     it('supports basic requests', async ()=> {
       server.files.set('/jquery', 'b-b-b-body')
-      let asset = new HttpAsset(url('/jquery'), { cache: false })
+      let asset = assetFactory('/jquery')
       let body = await asset.get()
       body.should.eql('b-b-b-body')
     })
@@ -36,7 +38,7 @@ describe('HttpAsset', ()=> {
     it('coalesces multiple calls to get', async ()=> {
       server.files.set('/call-me-maybe', 'hi')
 
-      let asset = new HttpAsset(url('/call-me-maybe'), { cache: false })
+      let asset = assetFactory('/call-me-maybe', { cache: false })
       await Promise.all([
         asset.get(),
         asset.get(),
@@ -53,7 +55,7 @@ describe('HttpAsset', ()=> {
         res.body = Date.now() + ''
       })
 
-      let asset = new HttpAsset(url('/refresh-cache'), { cacheStaleMs: 25 })
+      let asset = assetFactory('/refresh-cache', { cacheStaleMs: 25 })
       let one = await asset.get()
       let two = await asset.get()
       await delay(30)
@@ -67,7 +69,7 @@ describe('HttpAsset', ()=> {
     it('requests after cacheStaleMs', async ()=> {
       server.files.set('/refresh-cache', 'ok')
 
-      let asset = new HttpAsset(url('/refresh-cache'), { cacheStaleMs: 5 })
+      let asset = assetFactory('/refresh-cache', { cacheStaleMs: 5 })
       await asset.get()
       await delay(10)
       await asset.get()
@@ -85,7 +87,7 @@ describe('HttpAsset', ()=> {
         }
       })
 
-      let asset = new HttpAsset(url('/quark'), { cacheStaleMs: 0 })
+      let asset = assetFactory('/quark', { cacheStaleMs: 0 })
       ;(await asset.get()).should.equal('hi')
       ;(await asset.get()).should.equal('hi')
 
@@ -105,7 +107,7 @@ describe('HttpAsset', ()=> {
         }
       })
 
-      let asset = new HttpAsset(url('/check-etag'), { cacheStaleMs: 0 })
+      let asset = assetFactory('/check-etag', { cacheStaleMs: 0 })
       await asset.get()
       await asset.get()
 
@@ -132,7 +134,7 @@ describe('HttpAsset', ()=> {
         }
       })
 
-      let asset = new HttpAsset(url('/check-expires'), { cacheStaleMs: 1000 * 6 * 5 })
+      let asset = assetFactory('/check-expires', { cacheStaleMs: 1000 * 6 * 5 })
 
       await asset.get()
       await asset.get()

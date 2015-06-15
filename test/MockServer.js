@@ -1,7 +1,7 @@
 let debug = require('debug')('http-asset:MockServer')
 let {createServer} = require('http')
 let {parse} = require('url')
-let checksum = require('checksum')
+let md5 = require('spark-md5').hash
 
 export default class MockServer {
   constructor() {
@@ -66,7 +66,7 @@ export default class MockServer {
   }
 
   handleFile(event, body) {
-    let etag = checksum(body)
+    let etag = md5(body)
     let headers = event.res.headers;
     headers.ETag = etag
     headers['Content-Length'] = body.length
