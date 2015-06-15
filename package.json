@@ -1,6 +1,6 @@
 {
   "name": "http-asset",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Class for fetching and caching an asset over http",
   "main": "lib/HttpAsset.js",
   "scripts": {
