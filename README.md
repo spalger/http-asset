@@ -2,7 +2,7 @@
 
 Fetch, cache, and update some asset over http.
 
-Useful for managing things like lists of manifest that are maintained in a remote place, but you need regular access to locally. Designed for use by [esvm](https://www.npmjs.com/package/esvm) in order to download the list of available releases.
+Useful for managing things like lists or manifest that are stored somewhere else but needed regularly. Used by [esvm](https://www.npmjs.com/package/esvm) to download the list of available elasticsearch releases.
 
 ## features
 
