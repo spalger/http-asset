@@ -29,7 +29,7 @@ Construct an asset object. `url` is where the asset should be downloaded from, o
 
 | option         | default                      | description                             |
 | ------         | -------                      | -----------                             |
-| `cache`        | `true`                       | Set to true to disable caching          |
+| `cache`        | `true`                       | Set to false to disable caching          |
 | `cacheStaleMs` | `1000 * 60 * 5` (5 minutes)  | number of milliseconds before we should check for an update |
 | `cacheDir`     | `os.tmpDir()`                | Directory to store this asset's cache   |
 | `cacheName`    | `md5(url)`                   | Filename for the cache                  |
